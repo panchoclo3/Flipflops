@@ -1,0 +1,142 @@
+DATA:
+led 0
+sw 0
+dis 0
+btn 0
+sec 0
+milisegundos 0
+usec 0
+lcd 0
+jugador 0
+puntajes 0
+0
+jugadas 0
+0
+
+CODE:
+// 0 = Piedra, 1 = Papel, 2 = Tijera
+// Piedra le gana a Tijera pierde con Papel
+// Papel le gana a Piedra pierde con Tijera
+// Tijera le gana a Papel pierde con Piedra
+
+// 0 le gana a 2 pierde con 1
+// 1 le gana a 0 pierde con 2
+// 2 le gana a 1 pierde con 0
+
+esperar_subir_switch:
+	MOV A,(sw)
+	CMP A,0
+	JEQ esperar_subir_switch
+	JMP mostrar_jugador
+
+mostrar_jugador:
+	MOV B, (jugador)
+	INC B
+	MOV (dis), B
+	MOV (led), B
+	JMP esperar_input
+
+esperar_input:
+	MOV A, (btn)
+	CMP A, 0
+	JEQ esperar_input
+	JMP arreglar_valor_btn
+	volver_arreglar:
+	JMP guardar_jugada
+
+arreglar_valor_btn:
+	CMP A, 4
+	JEQ caso4
+	CMP A, 1
+	JEQ caso1
+	CMP A, 8
+	JEQ caso8
+	JMP fin_arreglar
+
+	caso4:
+		MOV A, 1
+		JMP fin_arreglar
+	caso1:
+		MOV A, 2
+		JMP fin_arreglar
+	caso8:
+		MOV A, 3
+		JMP fin_arreglar
+	fin_arreglar:
+		JMP volver_arreglar
+
+guardar_jugada: // VER LOS VALORES DE JUGADOR
+	MOV B,jugadas
+	ADD B,(jugador)
+	MOV (dis),B
+	MOV (B),A
+        JMP guardar_partida
+	JMP avanzar_turno
+
+avanzar_turno:
+	MOV B, (jugador)
+	INC B
+	MOV (jugador), B
+	MOV A, 2
+	CMP A, B
+	JEQ evaluar_jugada
+	JMP esperar_bajar_switch
+
+evaluar_jugada:
+	MOV B,0
+	MOV (jugador),B
+
+	MOV B,jugadas
+	INC B
+	MOV A,(B)
+	CMP A,(jugadas)
+	JEQ empate
+	JMP no_empate // temp
+
+	empate:
+		MOV B, 1EE2h
+		JMP mostrar_ganador
+
+	no_empate: // temp
+		MOV B, 1122h
+		JMP no_empate
+
+	ver_ganador:
+		ADD A, 2
+		CMP A, 2
+		JGT ternario
+
+		volver_ternario:
+		CMP A,B
+		JEQ ganador_jug1
+		JMP ganador_jug2
+
+		ganador_jug1:
+		MOV B, 1
+		JMP mostrar_ganador
+
+		ganador_jug2:
+		MOV B, 2
+		JMP mostrar_ganador
+
+ternario:
+	SUB A,3
+	JMP volver_ternario
+
+
+mostrar_ganador: // PASAR EL GANADOR POR EL REGISTRO B
+	//MOV B, jugadas
+	//INC B
+//MOV A, (B)
+
+	//MOV B, (jugadas)
+	MOV (dis), B
+	MOV A, FFFFh
+	MOV (led), A
+	JMP esperar_bajar_switch
+
+esperar_bajar_switch:
+	MOV A, (sw)
+	CMP A,0
+	JNE esperar_bajar_switch
+	JMP esperar_subir_switch

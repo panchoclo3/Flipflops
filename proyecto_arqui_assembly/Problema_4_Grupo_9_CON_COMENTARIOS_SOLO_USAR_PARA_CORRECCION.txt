@@ -1,0 +1,780 @@
+DATA:
+p1_x 2
+p1_y 8
+p1_z 1
+p2_x -5
+p2_y 10
+p2_z 1
+p3_x 2
+p3_y 8
+p3_z 1
+p4_x 2
+p4_y 8
+p4_z 6
+p5_x 2
+p5_y 10
+p5_z 1
+
+;Lados de la base, uno de los lados será de largo 1 por definición para que V = l1*l2*l3*altura/3
+l1 0
+l2 0
+l3 0
+altura 0
+
+;Puntos de la base sin coordenada de altura
+p1_v 0 
+p1_w 0
+p2_v 0 
+p2_w 0
+p3_v 0 
+p3_w 0
+p4_v 0 
+p4_w 0
+
+;memoria para get_dit
+dist 0
+pa_x 0
+pa_y 0
+pb_x 0
+pb_y 0
+delta_x 0
+delta_y 0
+dist_counter 0
+
+;memoria multiplicador
+contador_mult 0
+mult_1 0
+mult_2 0
+mult_resultado 0
+mult_sum 0
+n_mult 0
+
+;memoria divisor
+div_1 0
+div_2 0
+div_resta 0
+div_resultado 0
+
+;memoria abs
+abs_in 0
+abs_out 0
+abs_counter 0
+
+CODE:
+;------------------------------------------------ PARA X ------------------------------------------------
+comp_1:
+;Hace comparaciones entre 4 de 5 puntos para ver si son iguales en una componente
+;p1, p2, p3, p4
+mov a, (p2_x)
+cmp a, (p1_x)
+jne comp_2
+mov a, (p3_x)
+cmp a, (p2_x)
+jne comp_2
+mov a, (p4_x)
+cmp a, (p3_x)
+jne comp_2
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano z, y
+mov a, (p1_y)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_y)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p3_y)
+mov (p3_v),a
+mov a, (p3_z)
+mov (p3_w),a
+mov a, (p4_y)
+mov (p4_v),a
+mov a, (p4_z)
+mov (p4_w),a
+;altura
+mov a, (p1_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+comp_2:
+;p2, p3, p4, p5
+mov a, (p2_x)
+cmp a, (p3_x)
+jne comp_3
+mov a, (p3_x)
+cmp a, (p4_x)
+jne comp_3
+mov a, (p4_x)
+cmp a, (p5_x)
+jne comp_3
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano z, y
+mov a, (p2_y)
+mov (p1_v),a
+mov a, (p2_z)
+mov (p1_w),a
+mov a, (p3_y)
+mov (p2_v),a
+mov a, (p3_z)
+mov (p2_w),a
+mov a, (p4_y)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_y)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+;altura
+mov a, (p1_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+comp_3:
+;p1, p3, p4, p5
+mov a, (p1_x)
+cmp a, (p3_x)
+jne comp_4
+mov a, (p3_x)
+cmp a, (p4_x)
+jne comp_4
+mov a, (p4_x)
+cmp a, (p5_x)
+jne comp_4
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano z, y
+mov a, (p1_y)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p3_y)
+mov (p2_v),a
+mov a, (p3_z)
+mov (p2_w),a
+mov a, (p4_y)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_y)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+;altura
+mov a, (p2_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+comp_4:
+;p1, p2, p4, p5
+mov a, (p1_x)
+cmp a, (p2_x)
+jne comp_5
+mov a, (p2_x)
+cmp a, (p4_x)
+jne comp_5
+mov a, (p4_x)
+cmp a, (p5_x)
+jne comp_5
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano z, y
+mov a, (p1_y)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_y)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p4_y)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_y)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+;altura
+mov a, (p3_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+comp_5:
+;p1, p2, p3, p5
+mov a, (p1_x)
+cmp a, (p2_x)
+jne comp_6
+mov a, (p2_x)
+cmp a, (p3_x)
+jne comp_6
+mov a, (p3_x)
+cmp a, (p5_x)
+jne comp_6
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano z, y
+mov a, (p1_y)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_y)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p3_y)
+mov (p3_v),a
+mov a, (p3_z)
+mov (p3_w),a
+mov a, (p5_y)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+;altura
+mov a, (p4_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+;------------------------------------------------ PARA Y ------------------------------------------------
+comp_6:
+;p1, p2, p3, p4
+mov a, (p2_y)
+cmp a, (p1_y)
+jne comp_7
+mov a, (p3_y)
+cmp a, (p2_y)
+jne comp_7
+mov a, (p4_y)
+cmp a, (p3_y)
+jne comp_7
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, z
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p3_x)
+mov (p3_v),a
+mov a, (p3_z)
+mov (p3_w),a
+mov a, (p4_x)
+mov (p4_v),a
+mov a, (p4_z)
+mov (p4_w),a
+;altura
+mov a, (p1_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+comp_7:
+;p2, p3, p4, p5
+mov a, (p2_y)
+cmp a, (p3_y)
+jne comp_8
+mov a, (p3_y)
+cmp a, (p4_y)
+jne comp_8
+mov a, (p4_y)
+cmp a, (p5_y)
+jne comp_8
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, z
+mov a, (p2_x)
+mov (p1_v),a
+mov a, (p2_z)
+mov (p1_w),a
+mov a, (p3_x)
+mov (p2_v),a
+mov a, (p3_z)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+;altura
+mov a, (p1_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+comp_8:
+;p1, p3, p4, p5
+mov a, (p1_y)
+cmp a, (p3_y)
+jne comp_9
+mov a, (p3_y)
+cmp a, (p4_y)
+jne comp_9
+mov a, (p4_y)
+cmp a, (p5_y)
+jne comp_9
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, z
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p3_x)
+mov (p2_v),a
+mov a, (p3_z)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+;altura
+mov a, (p2_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+comp_9:
+;p1, p2, p4, p5
+mov a, (p1_y)
+cmp a, (p2_y)
+jne comp_10
+mov a, (p2_y)
+cmp a, (p4_y)
+jne comp_10
+mov a, (p4_y)
+cmp a, (p5_y)
+jne comp_10
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, z
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+;altura
+mov a, (p3_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+comp_10:
+;p1, p2, p3, p5
+mov a, (p1_y)
+cmp a, (p2_y)
+jne comp_11
+mov a, (p2_y)
+cmp a, (p3_y)
+jne comp_11
+mov a, (p3_y)
+cmp a, (p5_y)
+jne comp_11
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, z
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p3_x)
+mov (p3_v),a
+mov a, (p3_z)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+;altura
+mov a, (p4_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+;------------------------------------------------ PARA Z ------------------------------------------------
+comp_11:
+;p1, p2, p3, p4
+mov a, (p2_z)
+cmp a, (p1_z)
+jne comp_12
+mov a, (p3_z)
+cmp a, (p2_z)
+jne comp_12
+mov a, (p4_z)
+cmp a, (p3_z)
+jne comp_12
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, y
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_y)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_y)
+mov (p2_w),a
+mov a, (p3_x)
+mov (p3_v),a
+mov a, (p3_y)
+mov (p3_w),a
+mov a, (p4_x)
+mov (p4_v),a
+mov a, (p4_y)
+mov (p4_w),a
+;altura
+mov a, (p1_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_12:
+;p2, p3, p4, p5
+mov a, (p2_z)
+cmp a, (p3_z)
+jne comp_13
+mov a, (p3_z)
+cmp a, (p4_z)
+jne comp_13
+mov a, (p4_z)
+cmp a, (p5_z)
+jne comp_13
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, y
+mov a, (p2_x)
+mov (p1_v),a
+mov a, (p2_y)
+mov (p1_w),a
+mov a, (p3_x)
+mov (p2_v),a
+mov a, (p3_y)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_y)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_y)
+mov (p4_w),a
+;altura
+mov a, (p1_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_13:
+;p1, p3, p4, p5
+mov a, (p1_z)
+cmp a, (p3_z)
+jne comp_14
+mov a, (p3_z)
+cmp a, (p4_z)
+jne comp_14
+mov a, (p4_z)
+cmp a, (p5_z)
+jne comp_14
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, y
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_y)
+mov (p1_w),a
+mov a, (p3_x)
+mov (p2_v),a
+mov a, (p3_y)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_y)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_y)
+mov (p4_w),a
+;altura
+mov a, (p2_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_14:
+;p1, p2, p4, p5
+mov a, (p1_z)
+cmp a, (p2_z)
+jne comp_15
+mov a, (p2_z)
+cmp a, (p4_z)
+jne comp_15
+mov a, (p4_z)
+cmp a, (p5_z)
+jne comp_15
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, y
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_y)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_y)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_y)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_y)
+mov (p4_w),a
+;altura
+mov a, (p3_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_15:
+;p1, p2, p3, p5
+mov a, (p1_z)
+cmp a, (p2_z)
+jne comp_16
+mov a, (p2_z)
+cmp a, (p3_z)
+jne comp_16
+mov a, (p3_z)
+cmp a, (p5_z)
+jne comp_16
+;Guardar puntos, altura y saltar a siguiente etapa, sabemos que el área de la base está en el plano x, y
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_y)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_y)
+mov (p2_w),a
+mov a, (p3_x)
+mov (p3_v),a
+mov a, (p3_y)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_y)
+mov (p4_w),a
+;altura
+mov a, (p4_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_16:
+etapa_2:
+------------------------------------------ etapa 2 ------------------------------------------
+;Busca las distancias del punto (p1_v, p1_w) a los demás puntos y las guarda en l1, l2 y l3
+;también saca valores absolutos a l1, l2, l3 y altura
+;Carga un punto
+mov a, (p1_v)
+mov (pa_x), a
+mov a, (p1_w)
+mov (pa_y), a
+;Carga otro punto
+mov a, (p2_v)
+mov (pb_x), a
+mov a, (p2_w)
+mov (pb_y), a
+jmp get_dist
+after_get_dist_1:
+mov a, (dist)
+mov (abs_in), a
+jmp abs
+after_abs1:
+mov a, (abs_out)
+mov (l1), a
+;Carga otro punto
+mov a, (p3_v)
+mov (pb_x), a
+mov a, (p3_w)
+mov (pb_y), a
+jmp get_dist
+after_get_dist_2:
+mov a, (dist)
+mov (abs_in), a
+jmp abs
+after_abs2:
+mov a, (abs_out)
+mov (l2), a
+;Carga otro punto
+mov a, (p4_v)
+mov (pb_x), a
+mov a, (p4_w)
+mov (pb_y), a
+jmp get_dist
+after_get_dist_3:
+mov a, (dist)
+mov (abs_in), a
+jmp abs
+after_abs3:
+mov a, (abs_out)
+mov (l3), a
+;abs de altura
+mov a, (altura)
+mov (abs_in), a
+jmp abs
+after_abs4:
+mov a, (abs_out)
+mov (altura), a
+
+;hace el calculo Volumen = altura * l1 * l2 * l3 / 3
+mov a, (l1)
+mov (mult_1), a
+mov a, (l2)
+mov (mult_2), a
+jmp mult
+after_mult1:
+mov a, (mult_resultado)
+mov (mult_1), a
+mov a, (l3)
+mov (mult_2), a
+jmp mult
+after_mult2:
+mov a, (mult_resultado)
+mov (mult_1), a
+mov a, (altura)
+mov (mult_2), a
+jmp mult
+after_mult3:
+mov a, (mult_resultado)
+mov (div_1), a
+mov a, 3
+mov (div_2), a
+jmp div
+after_div:
+
+;resultado a registro B
+mov b, (div_resultado)
+jmp end
+
+;------------------------------------------ subrutinas ------------------------------------------
+get_dist:
+    ;Calcula distancia entre dos puntos (pa_x, pa_y) y (pb_x, pb_y) 2D cualquiera si comparten una componente de sus coordenadas
+    ;, si no comparten ninguna componente retorna 1, el retorno siendo en (dist)
+    ;sacar deltas
+    inc (dist_counter)
+    mov a, (pa_x)
+    mov b, (pb_x)
+    sub (delta_x) ;delta_x = pa_x - pb_x
+    mov a, (pa_y)
+    mov b, (pb_y)
+    sub (delta_y) ;delta_y = pa_y - pb_y
+
+    ;ver si uno es 0
+    mov a, (delta_y)
+    cmp a, 0 ;si uno es 0, retorna la suma de los delta
+      jeq return_dist
+
+    mov a, (delta_x)
+    cmp a, 0 ;si uno es 0, retorna la suma de los delta
+      jeq return_dist
+
+    ;si ninguno es 0 retorna 1
+    mov a, 1
+    mov (dist), a
+      jmp not_return_dist
+
+    return_dist:
+    mov a, (delta_y)
+    add a, (delta_x)
+    mov (dist), a
+
+    not_return_dist:
+    mov a, (dist_counter)
+    cmp a, 1
+    jeq after_get_dist_1
+    cmp a, 2
+    jeq after_get_dist_2
+    cmp a, 3
+    jeq after_get_dist_3
+;------------------------------------------
+mult:
+    ;Sub rutina de multiplicación, multiplica valores en (mult_1) y (mult_2)
+    inc (contador_mult)
+    mov a, 0
+    mov (mult_sum), a
+    mov (n_mult), a
+    mov (mult_resultado), a
+    for_mult:
+        ;mult1 y mult2 son los números a multiplicar
+        mov a, (mult_1)
+        cmp a, (n_mult)
+        jeq end_for_mult
+        mov a, 1
+        mov b, (n_mult)
+        add (n_mult)
+        ;suma mult_2, mult_1 veces
+        mov a, (mult_2)
+        mov b, (mult_sum)
+        add (mult_sum) ;mult_sum = mult_sum + mult_2
+        jmp for_mult
+    end_for_mult:
+    mov a, (mult_sum)
+    mov (mult_resultado), a
+    ;salto según veces que se ejecuta la subrutina
+    mov a, (contador_mult)
+    cmp a, 1
+    jeq after_mult1
+    cmp a, 2
+    jeq after_mult2
+    cmp a, 3
+    jeq after_mult3
+;------------------------------------------
+div:
+    ;Sub rutina de division, divide (div_1) entre (div_2) y lo retorna en (div_resultado)
+    ;Carga en div_resta el div_1
+    mov a, (div_1)
+    mov (div_resta), a
+    mov a, 0
+    mov (div_resultado), a
+    for_div:
+        ;va restando div_2
+        mov a, (div_resta)
+        sub a, (div_2) ;a = div_resta - div_2
+        cmp a, 0 ;si a es negativo, sale del loop
+        jlt end_for_div
+        mov (div_resta), a ;Si no, continua
+        inc (div_resultado)
+        jmp for_div
+    end_for_div:
+    jmp after_div
+;------------------------------------------
+abs:
+    inc (abs_counter)
+    ;Saca el valor absoluto de abs_counter y lo guarda en abs_out
+    mov a, (abs_in)
+    cmp a, 0
+    jlt neg
+    mov (abs_out), a
+    jmp end_abs
+    neg:
+    mov b, 0
+    sub b, a
+    mov (abs_out), b
+    end_abs:
+    mov a, (abs_counter)
+    cmp a, 1
+    jeq after_abs1
+    cmp a, 2
+    jeq after_abs2
+    cmp a, 3
+    jeq after_abs3
+    cmp a, 4
+    jeq after_abs4
+
+end:

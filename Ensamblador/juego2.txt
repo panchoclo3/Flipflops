@@ -1,0 +1,187 @@
+DATA:
+led 0
+sw 0
+dis 0
+btn 0
+sec 0
+msec 0
+usec 0
+lcd 0
+numerosecreto 4
+jugadores 3
+jugador 1
+aux 0
+jugador_1 0
+jugador_2 0
+jugador_3 0
+
+CODE: //  | Velocidad de clock a "full"
+
+//aqui se pone las caracteristicas iniciales que se deben tener al iniciar la partida,
+//los displays mostrando 1111, leds apagados y el primer jugador es el 1
+partida:
+    MOV A,0
+    MOV (led),A
+    MOV A,1
+    MOV (jugador),A
+    MOV A,1111h
+    MOV (dis),A
+
+//Loop para esperar que se suba el switch mas a la derecha
+empezar:
+    MOV A,(sw) // Switches a A
+    CMP A,0001h // Si Switches == 1
+    JEQ empezar_juego // Empezar de nuevo para compenzar el juego hasta que sw == 1
+    CMP A,4000h // Si Switches == "0100000000000000"
+    JEQ pntj_acumulado
+    JMP empezar
+
+pntj_acumulado:
+    MOV A,(jugador_3)
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    MOV B,A
+    MOV A,(jugador_2)
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    ADD A,B
+    MOV B,A
+    MOV A,(jugador_1)
+    ADD A,B
+    MOV (dis),A
+    MOV A,FFFFh
+    MOV (led),A
+    JMP espera
+
+espera:
+    MOV A,(sw)
+    CMP A,4000h
+    JNE partida
+    JMP espera
+
+empezar_juego:
+    MOV A,0
+    MOV (dis),A
+    MOV A,(msec)
+    AND A,0007h //and con los 3 bits menos significativos
+    MOV (numerosecreto),A
+
+//loop para los intentos de adivinar el numero
+input:
+    MOV A,(jugador)
+    CMP A,(jugadores) //si el jugador acual es > jugadores entonces se resetea a 1
+    JGT reset
+    CALL std_io_btn_wait // Esperar cambio en botones
+    MOV A,(sw) // Switches a A
+    CMP A,(numerosecreto) // Si Switches != numerosecreto
+    JNE siguiente // Siguiente jugador
+
+//Se termina el juego (no hay mas inputs)
+//////////////////////////////////////////////////////////////////////////////
+    MOV B,(jugador) // Mover a B el jugador que gano                        //
+    JMP puntaje
+mostrar_pntj:
+    ADD A,B
+    MOV (dis),A //mostramos en el display al jugador                        //
+    MOV A,FFFFh                                                             //
+    MOV (led),A                                                             //
+    JMP end                                                                 //
+//////////////////////////////////////////////////////////////////////////////
+
+puntaje:
+    MOV A,(jugador)
+    CMP A,1
+    JEQ j_1
+    CMP A,2
+    JEQ j_2
+    CMP A,3
+    JEQ j_3
+
+j_1:
+    MOV A,(jugador_1)
+    ADD A,1
+    MOV (jugador_1),A
+    JMP determinar_pntj
+
+j_2:
+    MOV A,(jugador_2)
+    ADD A,1
+    MOV (jugador_2),A
+    JMP determinar_pntj
+
+j_3:
+    MOV A,(jugador_3)
+    ADD A,1
+    MOV (jugador_3),A
+    JMP determinar_pntj
+
+determinar_pntj:
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    SHL A
+    JMP mostrar_pntj
+
+reset:
+    MOV A,1
+    MOV (jugador),A
+    JMP input
+
+//se incrementa en 1 la variable jugador
+siguiente:
+    MOV A,(jugador)
+    INC A
+    MOV (jugador),A
+    JMP input
+
+//loop para esperar un reinicio del juego, hasta que se suba el switch de mas a la izquierda
+end:
+    MOV A,(sw) // Switches a A
+    CMP A,8000h // Si Switches == 8000h
+    JEQ partida // reiniciar el juego
+    JMP end
+
+//La libreria solo se usa para esperar un input en el boton
+/////////////////Libreria std_io//////////////////////////////////////////
+//
+std_io_btn_wait: // * en A, * en B //
+PUSH B // Guarda B //
+MOV A,(btn) // Estado actual //
+MOV (aux),A
+std_io_btn_wait_press_lp: //
+MOV A,(sw)
+MOV (led),A
+MOV (dis),A
+MOV A,(aux)
+MOV B,(btn)
+CMP A,B // Si == Nuevo estad //
+JEQ std_io_btn_wait_press_lp // Continuar //
+XOR B,A // Bits cambiados //
+std_io_btn_wait_release_lp: //
+MOV A,(btn) // Nuevo estado //
+AND A,B // Bits aún cambiados //
+CMP A,0 // SI != 0 //
+JNE std_io_btn_wait_release_lp// Continuar //
+MOV A,B // Bits cambiados a A //
+POP B // Recupera B //
+RET // Retorna Bit(s) en A //
+//
+//////////////////////////////////////////////////////////////////////////
+
+

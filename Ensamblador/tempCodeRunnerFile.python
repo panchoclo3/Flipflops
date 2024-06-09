@@ -1,0 +1,5 @@
+operandos = 0x16
+print(hex(0x16))
+print(type(hex(0x16)))
+print(type(operandos))
+print(operandos)

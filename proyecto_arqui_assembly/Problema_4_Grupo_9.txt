@@ -1,0 +1,707 @@
+DATA:
+p1_x 2
+p1_y 8
+p1_z 1
+p2_x -5
+p2_y 10
+p2_z 1
+p3_x 2
+p3_y 8
+p3_z 1
+p4_x 2
+p4_y 8
+p4_z 6
+p5_x 2
+p5_y 10
+p5_z 1
+
+l1 0
+l2 0
+l3 0
+altura 0
+
+p1_v 0 
+p1_w 0
+p2_v 0 
+p2_w 0
+p3_v 0 
+p3_w 0
+p4_v 0 
+p4_w 0
+
+dist 0
+pa_x 0
+pa_y 0
+pb_x 0
+pb_y 0
+delta_x 0
+delta_y 0
+dist_counter 0
+
+contador_mult 0
+mult_1 0
+mult_2 0
+mult_resultado 0
+mult_sum 0
+n_mult 0
+
+div_1 0
+div_2 0
+div_resta 0
+div_resultado 0
+
+abs_in 0
+abs_out 0
+abs_counter 0
+
+CODE:
+comp_1:
+mov a, (p2_x)
+cmp a, (p1_x)
+jne comp_2
+mov a, (p3_x)
+cmp a, (p2_x)
+jne comp_2
+mov a, (p4_x)
+cmp a, (p3_x)
+jne comp_2
+mov a, (p1_y)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_y)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p3_y)
+mov (p3_v),a
+mov a, (p3_z)
+mov (p3_w),a
+mov a, (p4_y)
+mov (p4_v),a
+mov a, (p4_z)
+mov (p4_w),a
+mov a, (p1_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+comp_2:
+mov a, (p2_x)
+cmp a, (p3_x)
+jne comp_3
+mov a, (p3_x)
+cmp a, (p4_x)
+jne comp_3
+mov a, (p4_x)
+cmp a, (p5_x)
+jne comp_3
+mov a, (p2_y)
+mov (p1_v),a
+mov a, (p2_z)
+mov (p1_w),a
+mov a, (p3_y)
+mov (p2_v),a
+mov a, (p3_z)
+mov (p2_w),a
+mov a, (p4_y)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_y)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+mov a, (p1_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+comp_3:
+mov a, (p1_x)
+cmp a, (p3_x)
+jne comp_4
+mov a, (p3_x)
+cmp a, (p4_x)
+jne comp_4
+mov a, (p4_x)
+cmp a, (p5_x)
+jne comp_4
+mov a, (p1_y)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p3_y)
+mov (p2_v),a
+mov a, (p3_z)
+mov (p2_w),a
+mov a, (p4_y)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_y)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+mov a, (p2_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+comp_4:
+mov a, (p1_x)
+cmp a, (p2_x)
+jne comp_5
+mov a, (p2_x)
+cmp a, (p4_x)
+jne comp_5
+mov a, (p4_x)
+cmp a, (p5_x)
+jne comp_5
+mov a, (p1_y)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_y)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p4_y)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_y)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+mov a, (p3_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+comp_5:
+mov a, (p1_x)
+cmp a, (p2_x)
+jne comp_6
+mov a, (p2_x)
+cmp a, (p3_x)
+jne comp_6
+mov a, (p3_x)
+cmp a, (p5_x)
+jne comp_6
+mov a, (p1_y)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_y)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p3_y)
+mov (p3_v),a
+mov a, (p3_z)
+mov (p3_w),a
+mov a, (p5_y)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+mov a, (p4_x)
+sub a, (p5_x)
+mov (altura), a
+jmp etapa_2
+
+comp_6:
+mov a, (p2_y)
+cmp a, (p1_y)
+jne comp_7
+mov a, (p3_y)
+cmp a, (p2_y)
+jne comp_7
+mov a, (p4_y)
+cmp a, (p3_y)
+jne comp_7
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p3_x)
+mov (p3_v),a
+mov a, (p3_z)
+mov (p3_w),a
+mov a, (p4_x)
+mov (p4_v),a
+mov a, (p4_z)
+mov (p4_w),a
+mov a, (p1_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+comp_7:
+mov a, (p2_y)
+cmp a, (p3_y)
+jne comp_8
+mov a, (p3_y)
+cmp a, (p4_y)
+jne comp_8
+mov a, (p4_y)
+cmp a, (p5_y)
+jne comp_8
+mov a, (p2_x)
+mov (p1_v),a
+mov a, (p2_z)
+mov (p1_w),a
+mov a, (p3_x)
+mov (p2_v),a
+mov a, (p3_z)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+mov a, (p1_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+comp_8:
+mov a, (p1_y)
+cmp a, (p3_y)
+jne comp_9
+mov a, (p3_y)
+cmp a, (p4_y)
+jne comp_9
+mov a, (p4_y)
+cmp a, (p5_y)
+jne comp_9
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p3_x)
+mov (p2_v),a
+mov a, (p3_z)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+mov a, (p2_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+comp_9:
+mov a, (p1_y)
+cmp a, (p2_y)
+jne comp_10
+mov a, (p2_y)
+cmp a, (p4_y)
+jne comp_10
+mov a, (p4_y)
+cmp a, (p5_y)
+jne comp_10
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_z)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+mov a, (p3_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+comp_10:
+mov a, (p1_y)
+cmp a, (p2_y)
+jne comp_11
+mov a, (p2_y)
+cmp a, (p3_y)
+jne comp_11
+mov a, (p3_y)
+cmp a, (p5_y)
+jne comp_11
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_z)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_z)
+mov (p2_w),a
+mov a, (p3_x)
+mov (p3_v),a
+mov a, (p3_z)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_z)
+mov (p4_w),a
+mov a, (p4_y)
+sub a, (p5_y)
+mov (altura), a
+jmp etapa_2
+
+comp_11:
+mov a, (p2_z)
+cmp a, (p1_z)
+jne comp_12
+mov a, (p3_z)
+cmp a, (p2_z)
+jne comp_12
+mov a, (p4_z)
+cmp a, (p3_z)
+jne comp_12
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_y)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_y)
+mov (p2_w),a
+mov a, (p3_x)
+mov (p3_v),a
+mov a, (p3_y)
+mov (p3_w),a
+mov a, (p4_x)
+mov (p4_v),a
+mov a, (p4_y)
+mov (p4_w),a
+mov a, (p1_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_12:
+mov a, (p2_z)
+cmp a, (p3_z)
+jne comp_13
+mov a, (p3_z)
+cmp a, (p4_z)
+jne comp_13
+mov a, (p4_z)
+cmp a, (p5_z)
+jne comp_13
+mov a, (p2_x)
+mov (p1_v),a
+mov a, (p2_y)
+mov (p1_w),a
+mov a, (p3_x)
+mov (p2_v),a
+mov a, (p3_y)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_y)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_y)
+mov (p4_w),a
+mov a, (p1_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_13:
+mov a, (p1_z)
+cmp a, (p3_z)
+jne comp_14
+mov a, (p3_z)
+cmp a, (p4_z)
+jne comp_14
+mov a, (p4_z)
+cmp a, (p5_z)
+jne comp_14
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_y)
+mov (p1_w),a
+mov a, (p3_x)
+mov (p2_v),a
+mov a, (p3_y)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_y)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_y)
+mov (p4_w),a
+mov a, (p2_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_14:
+mov a, (p1_z)
+cmp a, (p2_z)
+jne comp_15
+mov a, (p2_z)
+cmp a, (p4_z)
+jne comp_15
+mov a, (p4_z)
+cmp a, (p5_z)
+jne comp_15
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_y)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_y)
+mov (p2_w),a
+mov a, (p4_x)
+mov (p3_v),a
+mov a, (p4_y)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_y)
+mov (p4_w),a
+mov a, (p3_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_15:
+mov a, (p1_z)
+cmp a, (p2_z)
+jne comp_16
+mov a, (p2_z)
+cmp a, (p3_z)
+jne comp_16
+mov a, (p3_z)
+cmp a, (p5_z)
+jne comp_16
+mov a, (p1_x)
+mov (p1_v),a
+mov a, (p1_y)
+mov (p1_w),a
+mov a, (p2_x)
+mov (p2_v),a
+mov a, (p2_y)
+mov (p2_w),a
+mov a, (p3_x)
+mov (p3_v),a
+mov a, (p3_y)
+mov (p3_w),a
+mov a, (p5_x)
+mov (p4_v),a
+mov a, (p5_y)
+mov (p4_w),a
+mov a, (p4_z)
+sub a, (p5_z)
+mov (altura), a
+jmp etapa_2
+
+comp_16:
+etapa_2:
+mov a, (p1_v)
+mov (pa_x), a
+mov a, (p1_w)
+mov (pa_y), a
+
+mov a, (p2_v)
+mov (pb_x), a
+mov a, (p2_w)
+mov (pb_y), a
+jmp get_dist
+after_get_dist_1:
+mov a, (dist)
+mov (abs_in), a
+jmp abs
+after_abs1:
+mov a, (abs_out)
+mov (l1), a
+
+mov a, (p3_v)
+mov (pb_x), a
+mov a, (p3_w)
+mov (pb_y), a
+jmp get_dist
+after_get_dist_2:
+mov a, (dist)
+mov (abs_in), a
+jmp abs
+after_abs2:
+mov a, (abs_out)
+mov (l2), a
+
+mov a, (p4_v)
+mov (pb_x), a
+mov a, (p4_w)
+mov (pb_y), a
+jmp get_dist
+after_get_dist_3:
+mov a, (dist)
+mov (abs_in), a
+jmp abs
+after_abs3:
+mov a, (abs_out)
+mov (l3), a
+
+mov a, (altura)
+mov (abs_in), a
+jmp abs
+after_abs4:
+mov a, (abs_out)
+mov (altura), a
+
+
+mov a, (l1)
+mov (mult_1), a
+mov a, (l2)
+mov (mult_2), a
+jmp mult
+after_mult1:
+mov a, (mult_resultado)
+mov (mult_1), a
+mov a, (l3)
+mov (mult_2), a
+jmp mult
+after_mult2:
+mov a, (mult_resultado)
+mov (mult_1), a
+mov a, (altura)
+mov (mult_2), a
+jmp mult
+after_mult3:
+mov a, (mult_resultado)
+mov (div_1), a
+mov a, 3
+mov (div_2), a
+jmp div
+after_div:
+
+mov b, (div_resultado)
+jmp end
+
+
+get_dist:
+    inc (dist_counter)
+    mov a, (pa_x)
+    mov b, (pb_x)
+    sub (delta_x)
+    mov a, (pa_y)
+    mov b, (pb_y)
+    sub (delta_y)
+
+    mov a, (delta_y)
+    cmp a, 0
+      jeq return_dist
+
+    mov a, (delta_x)
+    cmp a, 0
+      jeq return_dist
+
+    mov a, 1
+    mov (dist), a
+      jmp not_return_dist
+
+    return_dist:
+    mov a, (delta_y)
+    add a, (delta_x)
+    mov (dist), a
+
+    not_return_dist:
+    mov a, (dist_counter)
+    cmp a, 1
+    jeq after_get_dist_1
+    cmp a, 2
+    jeq after_get_dist_2
+    cmp a, 3
+    jeq after_get_dist_3
+
+mult:
+    inc (contador_mult)
+    mov a, 0
+    mov (mult_sum), a
+    mov (n_mult), a
+    mov (mult_resultado), a
+    for_mult:
+        mov a, (mult_1)
+        cmp a, (n_mult)
+        jeq end_for_mult
+        mov a, 1
+        mov b, (n_mult)
+        add (n_mult)
+        mov a, (mult_2)
+        mov b, (mult_sum)
+        add (mult_sum)
+        jmp for_mult
+    end_for_mult:
+    mov a, (mult_sum)
+    mov (mult_resultado), a
+    mov a, (contador_mult)
+    cmp a, 1
+    jeq after_mult1
+    cmp a, 2
+    jeq after_mult2
+    cmp a, 3
+    jeq after_mult3
+
+div:
+    mov a, (div_1)
+    mov (div_resta), a
+    mov a, 0
+    mov (div_resultado), a
+    for_div:
+        mov a, (div_resta)
+        sub a, (div_2)
+        cmp a, 0
+        jlt end_for_div
+        mov (div_resta), a
+        inc (div_resultado)
+        jmp for_div
+    end_for_div:
+    jmp after_div
+
+abs:
+    inc (abs_counter)
+    mov a, (abs_in)
+    cmp a, 0
+    jlt neg
+    mov (abs_out), a
+    jmp end_abs
+    neg:
+    mov b, 0
+    sub b, a
+    mov (abs_out), b
+    end_abs:
+    mov a, (abs_counter)
+    cmp a, 1
+    jeq after_abs1
+    cmp a, 2
+    jeq after_abs2
+    cmp a, 3
+    jeq after_abs3
+    cmp a, 4
+    jeq after_abs4
+
+end:

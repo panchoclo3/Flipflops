@@ -1,0 +1,34 @@
+DATA:
+ t 239
+ i 0
+
+CODE:
+
+    INC (i)
+    MOV A,8192
+    SHR A
+    CMP A,16384
+    JNE mal_1
+    SHL A
+    JCR mal_2
+    SHL A
+    JCR bien
+    JMP final
+
+mal_1:
+    MOV A,(t)
+    MOV B,1
+    JMP mal_1
+
+mal_2:
+    MOV A,(t)
+    MOV B,2
+    JMP mal_2
+bien:
+    MOV A,1
+    MOV B,0
+    JMP bien
+final:
+    MOV A,(t)
+    MOV B,3
+    JMP final

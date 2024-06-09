@@ -1,0 +1,18 @@
+DATA:
+a 15
+b 7
+prod 0
+CODE: 
+MOV A,(b)
+MOV B,0
+loop: 
+CMP A,B 
+JEQ end 
+MOV A,(a) 
+ADD A,(prod) 
+MOV (prod),A 
+INC B 
+MOV A,(b)
+JMP loop 
+end:
+JMP end

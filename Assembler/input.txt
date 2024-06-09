@@ -1,0 +1,13 @@
+DATA:
+CODE:
+
+ MOV B,1
+ MOV A,1
+ MOV (B),A      // mem[FFF] = 1
+ CALL func1
+
+func1:
+ MOV A,(B)      // A = nro-de-func1
+ MOV B, func1
+ CMP A,(func1)
+

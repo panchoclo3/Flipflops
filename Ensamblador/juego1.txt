@@ -1,0 +1,145 @@
+DATA:
+    led 0
+    sw 0
+    dis 0
+    btn 0
+    sec 0
+    msec 0
+    usec 0
+    lcd 0
+    contador 3
+CODE:
+    start:
+        MOV A,0
+        MOV (led),A
+        MOV (dis),A
+        JMP loop_inicio
+    loop_inicio:
+        MOV A,(1)
+        AND A,8000h
+        CMP A,8000h
+        JEQ start_cuenta
+        JMP boton
+    boton:
+        MOV B,(3)
+        MOV A,1
+        CMP A,B
+        JEQ boton_1
+        MOV A,2
+        CMP A,B
+        JEQ boton_2
+        MOV A,4
+        CMP A,B
+        JEQ boton_3
+        MOV A,8
+        CMP A,B
+        JEQ boton_4
+        MOV A,16
+        CMP A,B
+        JEQ boton_5
+        JMP loop_inicio
+    boton_1:
+        MOV B,2
+        MOV (B),1
+        JMP loop_inicio
+    boton_2:
+        MOV B,2
+        MOV (B),2
+        JMP loop_inicio
+    boton_3:
+        MOV B,2
+        MOV (B),3
+        JMP loop_inicio
+    boton_4:
+        MOV B,2
+        MOV (B),4
+        JMP loop_inicio
+    boton_5:
+        MOV B,2
+        MOV (B),5
+        JMP loop_inicio
+    start_cuenta:
+        MOV B,2
+        MOV (B),3
+        MOV A,(4)
+        ADD A,1
+        JMP loop_cuenta
+    mostrar:
+        CMP A,0
+        JEQ empezar_juego
+        MOV A,(4)
+        ADD A,1
+        JMP loop_cuenta
+    loop_cuenta:
+        CMP A,(4)
+        JEQ restar
+        JMP loop_cuenta
+    restar:
+        MOV A,(8)
+        SUB A,1
+        MOV (2),A
+        MOV B,8
+        MOV (B),A
+        JMP mostrar
+    empezar_juego:
+        MOV B,(5)
+        JMP loop_juego
+    loop_juego:
+        MOV A,(3)
+        CMP A,0
+        JGT asignar_ganador
+        JMP loop_juego
+    asignar_ganador:
+        MOV (9),B
+        MOV B,A
+        MOV A,1
+        CMP A,B
+        JEQ boton_12
+        MOV A,2
+        CMP A,B
+        JEQ boton_22
+        MOV A,4
+        CMP A,B
+        JEQ boton_32
+        MOV A,8
+        CMP A,B
+        JEQ boton_42
+        MOV A,16
+        CMP A,B
+        JEQ boton_52
+        MOV (2),A
+        JMP fin_partida
+    boton_12:
+        MOV B,2
+        MOV (B),1
+        JMP fin_partida
+    boton_22:
+        MOV B,2
+        MOV (B),2
+        JMP fin_partida
+    boton_32:
+        MOV B,2
+        MOV (B),3
+        JMP fin_partida
+    boton_42:
+        MOV B,2
+        MOV (B),4
+        JMP fin_partida
+    boton_52:
+        MOV B,2
+        MOV (B),5
+        JMP fin_partida
+    fin_partida:
+        MOV B,(9)
+        MOV A,(5)
+        SUB A,B
+        MOV (0),A
+        MOV B,8
+        MOV (B),3
+        JMP end
+    end:
+        MOV A,(1)
+        OR A,7FFFh
+        CMP A,7FFFh
+        JEQ start
+        JMP end

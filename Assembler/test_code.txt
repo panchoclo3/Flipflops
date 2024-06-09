@@ -1,0 +1,14 @@
+DATA:
+a 13
+b 14
+  13
+CODE:
+NOP
+RET
+_label1:
+MOV A, _label1
+JMP _label1
+CALL a
+MOV B, ( _label1)
+MOV B, _label1
+INC (_label1)

@@ -1,0 +1,25 @@
+MOV A,B;B,A;A,Lit;B,Lit;A,(Dir);B,(Dir);(Dir),A;(Dir),B;A,(B);B,(B);(B),A;(B),Lit
+ADD A,B;B,A;A,Lit;B,Lit;A,(Dir);B,(Dir);(Dir);A,(B);B,(B)
+SUB A,B;B,A;A,Lit;B,Lit;A,(Dir);B,(Dir);(Dir);A,(B);B,(B)
+AND A,B;B,A;A,Lit;B,Lit;A,(Dir);B,(Dir);(Dir);A,(B);B,(B)
+OR A,B;B,A;A,Lit;B,Lit;A,(Dir);B,(Dir);(Dir);A,(B);B,(B)
+XOR A,B;B,A;A,Lit;B,Lit;A,(Dir);B,(Dir);(Dir);A,(B);B,(B)
+NOT A;B,A;(Dir),A;(B),A
+SHL A;B,A;(Dir),A;(B),A
+SHR A;B,A;(Dir),A;(B),A
+INC A;B;(Dir);(B)
+DEC A
+CMP A,B;A,Lit;A,(Dir);A,(B)
+JMP Ins
+JEQ Ins
+JNE Ins
+JGT Ins
+JGE Ins
+JLT Ins
+JLE Ins
+JCR Ins
+PUSH A;B
+POP A;B
+CALL Ins
+RET
+NOP
